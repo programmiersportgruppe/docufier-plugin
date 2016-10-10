@@ -36,8 +36,6 @@ STAGING_URL=https://oss.sonatype.org/service/local/staging/deploy/maven2/
 
 echo "Releasing version ${version}"
 
-exit 1
-
 mvn gpg:sign-and-deploy-file \
     -Dgpg.keyname=felix@leipold.ws \
     -Durl=$STAGING_URL \

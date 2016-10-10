@@ -15,7 +15,7 @@ To get started you need to add the plugin to your maven build:
         <plugin>
             <groupId>org.buildobjects</groupId>
             <artifactId>docufier-plugin</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
             <executions>
                 <execution>
                     <phase>generate-resources</phase>
