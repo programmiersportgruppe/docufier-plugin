@@ -1,4 +1,4 @@
-package com.ruleoftech.markdown.page.generator.plugin;
+package org.buildobjects.docufier.plugin;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;

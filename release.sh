@@ -16,21 +16,19 @@ JAR_NAME=docufier-plugin
 PROJECT_NAME=docufier-plugin
 
 dirty=$(git status --porcelain)
-if [ "${dirty}" ]; then
-    echo "Cannot release because these files are dirty:"
-    echo "${dirty}"
-    exit 1
-fi >&2
+#if [ "${dirty}" ]; then
+#    echo "Cannot release because these files are dirty:"
+#    echo "${dirty}"
+#    exit 1
+#fi >&2
 
 find . -name target -prune -exec rm -r {} \;
 
-mvn test package javadoc:jar source:jar
+mkdir -p target
 
-mv target/$JAR_NAME-VERSION.jar target/$JAR_NAME-${version}.jar
-mv target/$JAR_NAME-VERSION-sources.jar target/$JAR_NAME-${version}-sources.jar
-mv target/$JAR_NAME-VERSION-javadoc.jar target/$JAR_NAME-${version}-javadoc.jar
+sed s/VERSION/${version}/g <pom.xml > derived-pom.xml
 
-sed s/VERSION/${version}/g <pom.xml > target/pom.xml
+mvn -f derived-pom.xml test package javadoc:jar source:jar
 
 STAGING_URL=https://oss.sonatype.org/service/local/staging/deploy/maven2/
 #rm -rf target
@@ -38,16 +36,17 @@ STAGING_URL=https://oss.sonatype.org/service/local/staging/deploy/maven2/
 
 echo "Releasing version ${version}"
 
+exit 1
+
 mvn gpg:sign-and-deploy-file \
     -Dgpg.keyname=felix@leipold.ws \
     -Durl=$STAGING_URL \
     -DrepositoryId=sonatype-nexus-staging \
-    -DpomFile=target/pom.xml \
+    -DpomFile=derived-pom.xml \
     -Dsources=target/$JAR_NAME-${version}-sources.jar \
     -Djavadoc=target/$JAR_NAME-${version}-javadoc.jar \
     -Dfile=target/$JAR_NAME-${version}.jar \
     -e
-
 
 tag="v${version}"
 
